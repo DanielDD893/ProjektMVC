@@ -1,0 +1,121 @@
+<%- include('../partials/header') %>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-eye"></i> Szczegóły treningu
+                </h4>
+                <div>
+                    <a href="/trainings/<%= training.id %>/edit" class="btn btn-warning btn-sm">
+                        <i class="bi bi-pencil"></i> Edytuj
+                    </a>
+                    <form method="POST" action="/trainings/<%= training.id %>?_method=DELETE" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Czy na pewno chcesz usunąć ten trening?')">
+                            <i class="bi bi-trash"></i> Usuń
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 class="text-primary mb-3"><%= training.name %></h2>
+                        
+                        <div class="mb-3">
+                            <h6 class="text-muted">Typ treningu</h6>
+                            <span class="badge bg-secondary fs-6"><%= training.type %></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="text-muted">Data treningu</h6>
+                            <p class="fs-5">
+                                <i class="bi bi-calendar-event text-primary"></i>
+                                <%= new Date(training.date).toLocaleDateString('pl-PL', { 
+                                    weekday: 'long', 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                }) %>
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="text-muted">Czas trwania</h6>
+                            <p class="fs-5">
+                                <i class="bi bi-clock text-info"></i>
+                                <%= training.duration %> minut
+                                <% if (training.duration >= 60) { %>
+                                    (<%= Math.floor(training.duration / 60) %>h <%= training.duration % 60 %>m)
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <h6 class="text-muted">Intensywność</h6>
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-3" style="height: 25px;">
+                                    <div class="progress-bar bg-<%= training.intensity <= 3 ? 'success' : training.intensity <= 7 ? 'warning' : 'danger' %>" 
+                                         style="width: <%= training.intensity * 10 %>%">
+                                        <%= training.intensity %>/10
+                                    </div>
+                                </div>
+                                <span class="badge bg-<%= training.intensity <= 3 ? 'success' : training.intensity <= 7 ? 'warning' : 'danger' %> fs-6">
+                                    <%= training.intensity <= 3 ? 'Łagodny' : training.intensity <= 7 ? 'Umiarkowany' : 'Intensywny' %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="text-muted">Utworzono</h6>
+                            <p class="text-muted">
+                                <i class="bi bi-plus-circle"></i>
+                                <%= new Date(training.createdAt).toLocaleDateString('pl-PL') %>
+                                o <%= new Date(training.createdAt).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) %>
+                            </p>
+                        </div>
+
+                        <% if (training.updatedAt) { %>
+                            <div class="mb-3">
+                                <h6 class="text-muted">Ostatnia modyfikacja</h6>
+                                <p class="text-muted">
+                                    <i class="bi bi-pencil"></i>
+                                    <%= new Date(training.updatedAt).toLocaleDateString('pl-PL') %>
+                                    o <%= new Date(training.updatedAt).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) %>
+                                </p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <% if (training.description) { %>
+                    <hr>
+                    <div class="mb-3">
+                        <h6 class="text-muted">Opis treningu</h6>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-0"><%= training.description %></p>
+                        </div>
+                    </div>
+                <% } %>
+
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <a href="/trainings" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Powrót do listy
+                    </a>
+                    <div>
+                        <a href="/trainings/<%= training.id %>/edit" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edytuj trening
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %> 

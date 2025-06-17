@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+
+<div class="row">
+    <div class="col-md-6 mx-auto text-center">
+        <div class="card">
+            <div class="card-body py-5">
+                <% if (error && error.status === 404) { %>
+                    <i class="bi bi-exclamation-triangle display-1 text-warning"></i>
+                    <h2 class="text-warning mt-3">404 - Strona nie znaleziona</h2>
+                <% } else { %>
+                    <i class="bi bi-x-circle display-1 text-danger"></i>
+                    <h2 class="text-danger mt-3">Wystąpił błąd</h2>
+                <% } %>
+                
+                <p class="lead text-muted mt-3"><%= message %></p>
+                
+                <div class="mt-4">
+                    <a href="/trainings" class="btn btn-primary">
+                        <i class="bi bi-house-door"></i> Powrót do Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %> 

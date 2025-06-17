@@ -1,0 +1,163 @@
+<%- include('../partials/header') %>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4 text-primary">
+            <i class="bi bi-speedometer2"></i> Dashboard Treningów
+        </h1>
+        <p class="lead">Zarządzaj swoimi treningami fitness i monitoruj postępy</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4><%= stats.total %></h4>
+                        <p class="mb-0">Wszystkich treningów</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-trophy fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4><%= stats.thisMonth %></h4>
+                        <p class="mb-0">W tym miesiącu</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-calendar-month fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4><%= stats.totalHours %>h <%= stats.totalMinutes %>m</h4>
+                        <p class="mb-0">Łączny czas</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-clock fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4><%= stats.avgIntensity %>/10</h4>
+                        <p class="mb-0">Średnia intensywność</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-lightning fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <a href="/trainings/new" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Dodaj nowy trening
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul"></i> Ostatnie treningi
+                </h5>
+            </div>
+            <div class="card-body">
+                <% if (trainings.length === 0) { %>
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox display-1 text-muted"></i>
+                        <h4 class="text-muted mt-3">Brak treningów</h4>
+                        <p class="text-muted">Dodaj swój pierwszy trening, aby rozpocząć!</p>
+                        <a href="/trainings/new" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Dodaj trening
+                        </a>
+                    </div>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nazwa</th>
+                                    <th>Typ</th>
+                                    <th>Data</th>
+                                    <th>Czas</th>
+                                    <th>Intensywność</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% trainings.forEach(training => { %>
+                                    <tr>
+                                        <td>
+                                            <strong><%= training.name %></strong>
+                                            <% if (training.description) { %>
+                                                <br><small class="text-muted"><%= training.description.substring(0, 50) %>...</small>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary"><%= training.type %></span>
+                                        </td>
+                                        <td><%= new Date(training.date).toLocaleDateString('pl-PL') %></td>
+                                        <td><%= training.duration %> min</td>
+                                        <td>
+                                            <div class="progress" style="width: 100px;">
+                                                <div class="progress-bar bg-<%= training.intensity <= 3 ? 'success' : training.intensity <= 7 ? 'warning' : 'danger' %>" 
+                                                     style="width: <%= training.intensity * 10 %>%">
+                                                    <%= training.intensity %>/10
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="/trainings/<%= training.id %>" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="/trainings/<%= training.id %>/edit" class="btn btn-sm btn-outline-warning">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <form method="POST" action="/trainings/<%= training.id %>?_method=DELETE" style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                            onclick="return confirm('Czy na pewno chcesz usunąć ten trening?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %> 
